@@ -63,7 +63,7 @@ const SignUp = () => {
       const user = userReq.data as User;
       setUser(user);
     } catch (err: any) {
-      setError(t(err.message) || t('something_went_wrong'));
+      setError(t(err.localeKey) || t('something_went_wrong'));
     }
   }
 
