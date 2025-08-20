@@ -73,7 +73,7 @@ function getGid() {
 }
 
 // Set basic environment variables
-setEnvVar('NODE_ENV', nodeEnv);
+// setEnvVar('NODE_ENV', nodeEnv);
 setEnvVar('HOST_UID', getUid());
 setEnvVar('HOST_GID', getGid());
 setEnvVar('GOOGLE_REDIRECT_URI', `http://localhost:${PORTS.AUTH}/auth/google/callback`);

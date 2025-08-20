@@ -62,7 +62,7 @@ build-clean:
 		npm run clean
 
 build-prod:
-		docker compose -f docker-compose.prod.yml build --parallel
+		docker compose -f docker-compose.stack.yml build --parallel
 
 check-types:
 		npm run type-check
@@ -96,19 +96,19 @@ install-clean:
 ################################################################################
 
 prod: env-prod build-prod
-		docker compose -f docker-compose.prod.yml up -d
+		docker compose -f docker-compose.stack.yml up -d
 
 prod-local: env-prod build
 		npm run start
 
 prod-stop:
-		docker compose -f docker-compose.prod.yml down
+		docker compose -f docker-compose.stack.yml down
 
 prod-logs:
-		docker compose -f docker-compose.prod.yml logs -f
+		docker compose -f docker-compose.stack.yml logs -f
 
 prod-clean:
-		docker compose -f docker-compose.prod.yml down --rmi all --volumes
+		docker compose -f docker-compose.stack.yml down --rmi all --volumes
 
 .PHONY: prod prod-local prod-stop prod-logs prod-clean
 

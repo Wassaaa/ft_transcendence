@@ -1,0 +1,39 @@
+{
+  email you@transcenders.online
+  # Optional: force minimal logs
+  # log {
+  #   output discard
+  # }
+}
+
+# Frontend
+app.transcenders.online {
+  root * /usr/share/caddy
+  try_files {path} /index.html
+  file_server
+  encode gzip zstd
+}
+
+# API gateway
+api.transcenders.online {
+  @auth path /auth*      # adjust to your real prefixes
+  @user path /users* /avatars* /admin* /friendships*
+  @score path /score*
+
+  reverse_proxy @auth  auth-service:3000
+  reverse_proxy @user  user-service:3000
+  reverse_proxy @score score-service:3000
+
+  # CORS (allow the app origin)
+  header {
+    Access-Control-Allow-Origin https://app.transcenders.online
+    Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    Access-Control-Allow-Headers *
+    Access-Control-Allow-Credentials true
+    # Preflight
+    @options method OPTIONS
+    handle @options {
+      respond "" 204
+    }
+  }
+}

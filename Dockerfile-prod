@@ -1,21 +1,25 @@
 FROM node:22-alpine AS base
 WORKDIR /workspace
-RUN apk add --no-cache sqlite
+RUN apk add --no-cache \
+    python3 make g++ \
+    vips-dev \
+    sqlite \
+    libc6-compat
 
 # Build all packages and install production dependencies
 COPY package.json package-lock.json ./
 COPY packages/ ./packages/
 COPY services/ ./services/
-COPY tsconfig.json ./
+COPY turbo.json tsconfig.json ./
 
 # Install all deps and build
 RUN npm ci --include=dev
 RUN npm run build:packages
-RUN npm run build:services
+RUN npm run build:backend
 
 # Clean install production deps
 RUN rm -rf node_modules
-RUN npm ci --omit=dev --omit=optional
+RUN npm ci --omit=dev --include=optional
 
 ################################################################################
 # Service-specific stage
@@ -24,6 +28,7 @@ FROM base AS service
 
 ARG SERVICE_NAME
 ENV SERVICE_NAME=${SERVICE_NAME}
+ENV PORT=3000
 
 WORKDIR /workspace/services/${SERVICE_NAME}
 
