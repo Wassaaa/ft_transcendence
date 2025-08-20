@@ -87,8 +87,10 @@ Object.entries(PORTS).forEach(([service, port]) => {
   const serviceUrl =
     env === 'local' ? `http://localhost:${port}` : `http://${serviceLower}-service:${port}`;
 
-  // Vite URLs are always localhost for now
-  const viteUrl = `http://localhost:${port}`;
+  let viteUrl = `http://localhost:${port}`;
+  if (env === 'production') {
+    viteUrl = `api.transcenders.online`;
+  }
 
   setEnvVar(`${service}_SERVICE_URL`, serviceUrl);
   setEnvVar(`VITE_${service}_SERVICE_URL`, viteUrl);
