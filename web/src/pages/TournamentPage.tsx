@@ -311,7 +311,7 @@ function TournamentPage() {
           <div className="w-full flex justify-between items-center mb-4 px-8">
             <div className="flex flex-col items-center">
               <div className="relative">
-                <div className="bubble bg-white/50 w-14 h-14 sm:w-24 sm:h-24 lg:w-28 lg:h-28 flex items-end justify-center overflow-hidden flex-shrink-0">
+                <div className="bubble bg-white/50 w-14 h-14 sm:w-24 sm:h-24 lg:w-28 lg:h-28 flex items-end justify-center overflow-hidden shrink-0">
                   {currentMatchPlayers.player1?.avatar ? (
                     <img
                       src={ApiClient.user.getFullAvatarURL(currentMatchPlayers.player1.avatar)}
@@ -340,7 +340,7 @@ function TournamentPage() {
 
             <div className="flex flex-col items-center">
               <div className="relative">
-                <div className="bubble bg-white/50 w-14 h-14 sm:w-24 sm:h-24 lg:w-28 lg:h-28 flex items-end justify-center overflow-hidden flex-shrink-0">
+                <div className="bubble bg-white/50 w-14 h-14 sm:w-24 sm:h-24 lg:w-28 lg:h-28 flex items-end justify-center overflow-hidden shrink-0">
                   {currentMatchPlayers.player2?.avatar ? (
                     <img
                       src={ApiClient.user.getFullAvatarURL(currentMatchPlayers.player2.avatar)}
@@ -388,7 +388,7 @@ function TournamentPage() {
 
               {/* Overlay Messages */}
               {gameStatus === GameStatus.WAITING && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#c2410c] bg-opacity-50 text-white">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#c2410c]/50 text-white">
                   <div className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-center px-4">
                     {t('pressSpaceToStart')}
                   </div>
@@ -402,7 +402,7 @@ function TournamentPage() {
               )}
 
               {gameStatus === GameStatus.PAUSED && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#c2410c] bg-opacity-50 text-white pointer-events-none">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#c2410c]/50 text-white pointer-events-none">
                   <div className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 pointer-events-auto">
                     {t('paused')}
                   </div>
@@ -411,7 +411,7 @@ function TournamentPage() {
               )}
 
               {gameStatus === GameStatus.ENDED && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#c2410c] bg-opacity-50 text-white">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#c2410c]/50 text-white">
                   <div className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-center px-4">
                     {t('playerWins', '{{player}} Wins!', { player: winner })}
                   </div>
