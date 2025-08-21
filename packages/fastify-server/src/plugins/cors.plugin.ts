@@ -6,10 +6,7 @@ export async function registerCors(fastify: FastifyInstance) {
     origin: [
       /^http:\/\/localhost:\d+$/,
       /^http:\/\/127\.0\.0\.1:\d+$/,
-      'http://app.transcenders.online',
-      'http://app.transcenders.online/',
       'https://app.transcenders.online',
-      'https://app.transcenders.online/',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
