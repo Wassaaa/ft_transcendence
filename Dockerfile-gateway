@@ -10,9 +10,15 @@ COPY turbo.json tsconfig.json ./
 # install all workspace deps using the single root lockfile
 RUN npm ci --include=dev
 
-# build the web workspace; pass API URL at build-time
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+# build the web workspace; pass API URLS at build-time
+
+ARG VITE_USER_SERVICE_URL
+ARG VITE_AUTH_SERVICE_URL
+ARG VITE_SCORE_SERVICE_URL
+
+ENV VITE_USER_SERVICE_URL=${VITE_USER_SERVICE_URL}
+ENV VITE_AUTH_SERVICE_URL=${VITE_AUTH_SERVICE_URL}
+ENV VITE_SCORE_SERVICE_URL=${VITE_SCORE_SERVICE_URL}
 RUN npm run build:frontend
 
 # ---- Runtime: Caddy serving the built web + reverse proxy for APIs ----

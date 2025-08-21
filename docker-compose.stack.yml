@@ -62,7 +62,9 @@ services:
       context: .
       dockerfile: Dockerfile-gateway
       args:
-        VITE_API_BASE_URL: 'https://api.transcenders.online'
+        VITE_USER_SERVICE_URL: ${VITE_USER_SERVICE_URL}
+        VITE_AUTH_SERVICE_URL: ${VITE_AUTH_SERVICE_URL}
+        VITE_SCORE_SERVICE_URL: ${VITE_SCORE_SERVICE_URL}
     restart: unless-stopped
     ports:
       - '80:80'
