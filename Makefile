@@ -9,13 +9,13 @@ all: local
 setup-check:
 		@./scripts/docker-deps-check.sh
 
-env-local: setup-check
+env-local:
 		@scripts/env-gen.js local
 
-env-docker: setup-check
+env-docker:
 		@scripts/env-gen.js docker
 
-env-prod: setup-check
+env-prod:
 		@scripts/env-gen.js production
 
 .PHONY: setup-check env-local env-docker env-prod
@@ -24,20 +24,20 @@ env-prod: setup-check
 # DEVELOPMENT
 ################################################################################
 
-docker: env-docker
+docker: setup-check env-docker
 		docker compose up -d
 		$(MAKE) dev-web
 
-local: env-local
+local: setup-check env-local
 		npm run dev
 
-dev-web: env-local
+dev-web: setup-check env-local
 		npm run dev:frontend
 
-dev-backend: env-local
+dev-backend: setup-check env-local
 		npm run dev:backend
 
-dev-compiled: env-local
+dev-compiled: setup-check env-local
 		npm run build
 		npm run dev:compiled
 
@@ -63,7 +63,7 @@ restart: stop dev
 # BUILD & TESTING
 ################################################################################
 
-build: env-local
+build: setup-check env-local
 		npm run build
 
 build-clean:
@@ -90,7 +90,7 @@ fix-lint:
 fix-deps:
 		npx npm-check-updates --interactive --workspaces
 
-test: env-local
+test: setup-check env-local
 		npm run test
 
 install-clean:
@@ -107,7 +107,7 @@ PROD_DOCKER_COMPOSE := docker compose -f docker-compose.prod.yml
 prod: env-prod build-prod
 		docker compose -f docker-compose.prod.yml up -d
 
-prod-local: env-prod build
+prod-local: setup-check env-prod build-prod
 		npm run start
 
 prod-stop:
@@ -115,10 +115,7 @@ prod-stop:
 
 prod-clean:
 		$(PROD_DOCKER_COMPOSE) down --rmi all
-		
-prod-clean-data:
-		$(PROD_DOCKER_COMPOSE) down --rmi all --volumes
-		
+
 prod-logs:
 	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
 		$(PROD_DOCKER_COMPOSE) logs -f; \

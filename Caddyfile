@@ -5,6 +5,14 @@
 
 # -------- Frontend (must exist so Caddy gets a cert for app.*) --------
 app.transcenders.online {
+  log {
+    output stdout
+    format json
+  }
+  # less noise on logs
+  @static path_regexp \.(js|css|png|jpe?g|gif|ico|woff2?|otf|ttf|svg|map)$
+  log_skip @static
+  
   root * /usr/share/caddy
   try_files {path} /index.html
   file_server
@@ -13,6 +21,12 @@ app.transcenders.online {
 
 # -------- API with CORS on Caddy --------
 api.transcenders.online {
+  log {
+    output stdout
+    format json
+  } 
+  # don’t log CORS preflights
+  log_skip @preflight_app
 
   # Allow only the SPA origin
   @from_app header Origin https://app.transcenders.online
