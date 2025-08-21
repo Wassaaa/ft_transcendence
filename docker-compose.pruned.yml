@@ -1,38 +1,33 @@
 name: transcendence-stack
 services:
-  # --- Backend microservices (internal only) ---
   user-service:
     build:
       context: .
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-pruned
       target: service
       args:
-        SERVICE_NAME: user-service
-    env_file:
-      - .env
+        SVC: user-service
+    env_file: [.env]
     environment:
-      - NODE_ENV=production
       - PORT=3000
     volumes:
-      - user_avatars:/workspace/media/avatars
-      - user_data:/workspace/database
+      - user_avatars:/repo/media/avatars
+      - user_data:/repo/database
     expose: ['3000']
     restart: unless-stopped
 
   auth-service:
     build:
       context: .
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-pruned
       target: service
       args:
-        SERVICE_NAME: auth-service
-    env_file:
-      - .env
+        SVC: auth-service
+    env_file: [.env]
     environment:
-      - NODE_ENV=production
       - PORT=3000
     volumes:
-      - auth_data:/workspace/database
+      - auth_data:/repo/database
     expose: ['3000']
     restart: unless-stopped
     depends_on:
@@ -41,17 +36,15 @@ services:
   score-service:
     build:
       context: .
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-pruned
       target: service
       args:
-        SERVICE_NAME: score-service
-    env_file:
-      - .env
+        SVC: score-service
+    env_file: [.env]
     environment:
-      - NODE_ENV=production
       - PORT=3000
     volumes:
-      - score_data:/workspace/database
+      - score_data:/repo/database
     expose: ['3000']
     restart: unless-stopped
 
@@ -59,8 +52,10 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: Dockerfile-gateway
+      dockerfile: Dockerfile-pruned
+      target: web
       args:
+        SVC: web
         VITE_USER_SERVICE_URL: ${VITE_USER_SERVICE_URL}
         VITE_AUTH_SERVICE_URL: ${VITE_AUTH_SERVICE_URL}
         VITE_SCORE_SERVICE_URL: ${VITE_SCORE_SERVICE_URL}

@@ -69,9 +69,6 @@ build: setup-check env-local
 build-clean:
 		npm run clean
 
-build-prod:
-		docker compose -f docker-compose.prod.yml build --parallel
-
 check-types:
 		npm run type-check
 
@@ -97,18 +94,16 @@ install-clean:
 		rm -rf node_modules package-lock.json
 		npm install
 
-.PHONY: build build-clean build-prod check-types check-lint check-outdated check-audit fix-lint fix-deps test install-clean
+.PHONY: build build-clean check-types check-lint check-outdated check-audit fix-lint fix-deps test install-clean
 
 ################################################################################
 # PRODUCTION
 ################################################################################
-PROD_DOCKER_COMPOSE := docker compose -f docker-compose.prod.yml
+PROD_DOCKER_COMPOSE := docker compose -f docker-compose.pruned.yml
 
-prod: env-prod build-prod
-		docker compose -f docker-compose.prod.yml up -d
-
-prod-local: setup-check env-prod build-prod
-		npm run start
+prod: env-prod
+		$(PROD_DOCKER_COMPOSE) build --parallel
+		$(PROD_DOCKER_COMPOSE) up -d
 
 prod-stop:
 		$(PROD_DOCKER_COMPOSE) down
@@ -183,7 +178,6 @@ help:
 		@echo "Build & Testing:"
 		@echo "  build           Build all packages and services"
 		@echo "  build-clean     Clean all build artifacts"
-		@echo "  build-prod      Build production Docker images"
 		@echo "  check-types     Run TypeScript type checking"
 		@echo "  check-lint      Run linting"
 		@echo "  check-outdated  Check for outdated dependencies"
