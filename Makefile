@@ -108,15 +108,18 @@ prod-logs:
 		docker compose -f docker-compose.prod.yml logs -f
 
 prod-clean:
+		docker compose -f docker-compose.prod.yml down --rmi all
+		
+prod-clean-data:
 		docker compose -f docker-compose.prod.yml down --rmi all --volumes
 
-.PHONY: prod prod-local prod-stop prod-logs prod-clean
+.PHONY: prod prod-local prod-stop prod-logs prod-clean prod-clean-data
 
 ################################################################################
 # CLEAN
 ################################################################################
 
-clean: dev-stop prod-stop
+clean: dev-stop
 		docker compose down --remove-orphans --rmi all
 		docker system prune -f
 		npm run clean
