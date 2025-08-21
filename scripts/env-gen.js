@@ -78,7 +78,12 @@ setEnvVar('HOST_UID', getUid());
 setEnvVar('HOST_GID', getGid());
 setEnvVar('GOOGLE_REDIRECT_URI', `http://localhost:${PORTS.AUTH}/auth/google/callback`);
 setEnvVar('FRONTEND_URL', 'http://localhost:5173');
-setEnvVar('MAIL_FROM', 'Transcenders Auth <auth@transcenders.online>');
+setEnvVar('MAIL_FROM', '"Transcenders Auth <auth@transcenders.online>"');
+
+// prod overrides
+if (env === 'production') {
+  setEnvVar('FRONTEND_URL', 'http://localhost:5173');
+}
 
 // Set service URLs
 Object.entries(PORTS).forEach(([service, port]) => {
@@ -89,7 +94,7 @@ Object.entries(PORTS).forEach(([service, port]) => {
 
   let viteUrl = `http://localhost:${port}`;
   if (env === 'production') {
-    viteUrl = `http://api.transcenders.online`;
+    viteUrl = `https://api.transcenders.online`;
   }
 
   setEnvVar(`${service}_SERVICE_URL`, serviceUrl);
