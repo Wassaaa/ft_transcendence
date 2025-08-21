@@ -37,6 +37,5 @@ coverage/
 
 database/*.db
 docker-compose*.yml
-media
 .vscode
 .DS_Store
