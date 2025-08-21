@@ -3,14 +3,14 @@
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 
-const PORTS = {
-  USER: 3001,
-  AUTH: 3002,
-  SCORE: 3003,
-};
-
 const env = process.argv[2] || 'local';
 const outFile = '.env';
+
+const PORTS = {
+  USER: env === 'production' ? 3000 : 3001,
+  AUTH: env === 'production' ? 3000 : 3002,
+  SCORE: env === 'production' ? 3000 : 3003,
+};
 
 function usage() {
   console.log('Usage: node env-gen.js <local|docker|production>');
