@@ -47,6 +47,14 @@ dev-logs:
 stop:
 		docker compose down
 
+dev-exec:
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Usage: make dev-exec <service>"; \
+	else \
+		SVC=$(filter-out $@,$(MAKECMDGOALS)) && \
+		docker compose exec -it $$SVC ash; \
+	fi
+
 restart: stop dev
 
 .PHONY: dev dev-local dev-web dev-backend dev-compiled dev-logs dev-stop dev-restart
@@ -112,6 +120,14 @@ prod-clean:
 		
 prod-clean-data:
 		docker compose -f docker-compose.prod.yml down --rmi all --volumes
+
+prod-exec:
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Usage: make prod-exec <service>"; \
+	else \
+		SVC=$(filter-out $@,$(MAKECMDGOALS)) && \
+		docker compose -f docker-compose.prod.yml exec -it $$SVC ash; \
+	fi
 
 .PHONY: prod prod-local prod-stop prod-logs prod-clean prod-clean-data
 
