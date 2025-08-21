@@ -1,15 +1,25 @@
-# API gateway
+# -------- Frontend (must exist so Caddy gets a cert for app.*) --------
+app.transcenders.online {
+  root * /usr/share/caddy
+  try_files {path} /index.html
+  file_server
+  encode gzip zstd
+}
+
+# -------- API with CORS on Caddy --------
 api.transcenders.online {
 
-  # --- CORS: PRE-FLIGHT ---
-  @preflight {
+  # Allow only the SPA origin
+  @from_app header Origin https://app.transcenders.online
+
+  # --- Preflight (OPTIONS) ---
+  @preflight_app {
     method OPTIONS
-    header Origin *
+    header Origin https://app.transcenders.online
     header Access-Control-Request-Method *
   }
-  handle @preflight {
-    @from_app header Origin https://app.transcenders.online
-    header @from_app {
+  handle @preflight_app {
+    header {
       Access-Control-Allow-Origin {http.request.header.Origin}
       Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
       Access-Control-Allow-Headers {http.request.header.Access-Control-Request-Headers}
@@ -20,19 +30,17 @@ api.transcenders.online {
     respond "" 204
   }
 
-  @has_origin header Origin *
-  @from_app  header Origin https://app.transcenders.online
+  # --- Actual requests: reflect allowed origin ---
   header @from_app {
     Access-Control-Allow-Origin {http.request.header.Origin}
     Access-Control-Allow-Credentials true
     Vary Origin
   }
 
-  # --- ROUTING ---
+  # --- Routing ---
   @auth  path /auth* /2fa*
   @user  path /users* /avatars* /admin* /friendships*
   @score path /score*
-
   reverse_proxy @auth  auth-service:3000
   reverse_proxy @user  user-service:3000
   reverse_proxy @score score-service:3000
