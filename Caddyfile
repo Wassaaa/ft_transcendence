@@ -1,3 +1,8 @@
+{
+  email you@transcenders.online
+  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
 # -------- Frontend (must exist so Caddy gets a cert for app.*) --------
 app.transcenders.online {
   root * /usr/share/caddy
