@@ -1,6 +1,6 @@
 {
   email you@transcenders.online
-  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+  acme_ca https://acme.zerossl.com/v2/DV90
 }
 
 # -------- Frontend (must exist so Caddy gets a cert for app.*) --------
