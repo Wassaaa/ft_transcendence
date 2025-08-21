@@ -6,7 +6,7 @@ all: local
 # SETUP
 ################################################################################
 
-setup-check: env-local
+setup-check:
 		@./scripts/docker-deps-check.sh
 
 env-local: setup-check
@@ -102,6 +102,7 @@ install-clean:
 ################################################################################
 # PRODUCTION
 ################################################################################
+PROD_DOCKER_COMPOSE := docker compose -f docker-compose.prod.yml
 
 prod: env-prod build-prod
 		docker compose -f docker-compose.prod.yml up -d
@@ -110,23 +111,28 @@ prod-local: env-prod build
 		npm run start
 
 prod-stop:
-		docker compose -f docker-compose.prod.yml down
-
-prod-logs:
-		docker compose -f docker-compose.prod.yml logs -f
+		$(PROD_DOCKER_COMPOSE) down
 
 prod-clean:
-		docker compose -f docker-compose.prod.yml down --rmi all
+		$(PROD_DOCKER_COMPOSE) down --rmi all
 		
 prod-clean-data:
-		docker compose -f docker-compose.prod.yml down --rmi all --volumes
+		$(PROD_DOCKER_COMPOSE) down --rmi all --volumes
+		
+prod-logs:
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		$(PROD_DOCKER_COMPOSE) logs -f; \
+	else \
+		SVC=$(filter-out $@,$(MAKECMDGOALS)) && \
+		$(PROD_DOCKER_COMPOSE) logs $$SVC -f; \
+	fi
 
 prod-exec:
 	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
 		echo "Usage: make prod-exec <service>"; \
 	else \
 		SVC=$(filter-out $@,$(MAKECMDGOALS)) && \
-		docker compose -f docker-compose.prod.yml exec -it $$SVC ash; \
+		$(PROD_DOCKER_COMPOSE) exec -it $$SVC ash; \
 	fi
 
 .PHONY: prod prod-local prod-stop prod-logs prod-clean prod-clean-data
