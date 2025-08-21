@@ -36,3 +36,4 @@ api.transcenders.online {
   reverse_proxy @auth  auth-service:3000
   reverse_proxy @user  user-service:3000
   reverse_proxy @score score-service:3000
+}
