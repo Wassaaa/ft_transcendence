@@ -10,6 +10,7 @@ RUN apk add --no-cache \
 COPY package.json package-lock.json ./
 COPY packages/ ./packages/
 COPY services/ ./services/
+COPY media/ ./media/
 COPY turbo.json tsconfig.json ./
 
 # Install all deps and build

@@ -14,8 +14,8 @@ services:
       - NODE_ENV=production
       - PORT=3000
     volumes:
-      - user_uploads:/workspace/uploads
-      - user_data:/workspace/media
+      - user_media:/workspace/media
+      - user_data:/workspace/database
     expose: ['3000']
     restart: unless-stopped
 
@@ -77,7 +77,7 @@ services:
       - caddy_config:/config
 
 volumes:
-  user_uploads:
+  user_media:
   user_data:
   auth_data:
   score_data:
